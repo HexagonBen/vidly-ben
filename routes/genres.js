@@ -22,7 +22,7 @@ router.post("/", async (req, res) => {
     
     try {
         genre = await genre.save()
-        console.log(result)
+        console.log("Genre added:", genre)
     }
     catch (ex) {
         console.log(ex.message)

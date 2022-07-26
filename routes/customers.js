@@ -26,7 +26,7 @@ router.post("/", async (req, res) => {
     
     try {
         customer = await customer.save()
-        console.log(result)
+        console.log("Customer added:", customer)
     }
     catch (ex) {
         console.log(ex.message)
