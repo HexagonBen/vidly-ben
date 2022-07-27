@@ -23,14 +23,8 @@ router.post("/", async (req, res) => {
         phone: req.body.phone,
         isGold: req.body.isGold
     })
-    
-    try {
-        customer = await customer.save()
-        console.log("Customer added:", customer)
-    }
-    catch (ex) {
-        console.log(ex.message)
-    }
+    await customer.save()
+    console.log("Customer added:", customer)
     res.send(customer)
 })
 

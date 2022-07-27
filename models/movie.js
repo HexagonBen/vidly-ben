@@ -34,7 +34,7 @@ function validateMovie(movie) {
         title: Joi.string().min(5).max(50).required(),
         // note that we call this genreId and not genre, because we are pointing to the genre with its reference id
         // genreId is saved into the variable "genre" in the post & put routes to be fed into Mongoose validation
-        genreId: Joi.string().required(),
+        genreId: Joi.objectId().required(),
         numberInStock: Joi.number().min(0).required(),
         dailyRentalRate: Joi.number().min(0).required()
     }
