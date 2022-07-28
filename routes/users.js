@@ -1,3 +1,4 @@
+const auth = require("../middleware/auth")
 const jwt = require("jsonwebtoken")
 const config = require("config")
 const _ = require("lodash")
@@ -7,14 +8,14 @@ const express = require("express")
 const router = express.Router()
 const {User, validateUser} = require("../models/user")
 
-router.get("/", async (req, res) => {
+router.get("/", auth, async (req, res) => {
     const users = await User.find().sort("name")
     res.send(users)
 })
 
-router.get("/:id", async (req, res) => {
-    const user = await User.findById(req.params.id)
-    if (!user) return res.status(404).send("The user with the given ID was not found.")
+router.get("/me", auth, async (req, res) => {
+    // the auth function adds the user._id key & value to the req object.
+    const user = await User.findById(req.user._id).select("-password")
     res.send(user)
 })
 
@@ -40,7 +41,7 @@ router.post("/", async (req, res) => {
     res.header("x-auth-token", token).send( _.pick(user, ["_id", "name", "email"]) )
 })
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", auth, async (req, res) => {
     const result = validateUser(req.body)
     if (result.error) return res.status(400).send(result.error.details[0].message)
 
@@ -53,7 +54,7 @@ router.put("/:id", async (req, res) => {
     res.send(user)
 })
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", auth, async (req, res) => {
     const user = await User.findByIdAndRemove(req.params.id)
 
     if(!user) return res.status(404).send("The user with the given ID was not found")
