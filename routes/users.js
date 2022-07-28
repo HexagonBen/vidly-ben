@@ -1,4 +1,5 @@
 const auth = require("../middleware/auth")
+const checkAdmin = require("../middleware/admin")
 const jwt = require("jsonwebtoken")
 const config = require("config")
 const _ = require("lodash")
@@ -8,7 +9,7 @@ const express = require("express")
 const router = express.Router()
 const {User, validateUser} = require("../models/user")
 
-router.get("/", auth, async (req, res) => {
+router.get("/", [auth, checkAdmin], async (req, res) => {
     const users = await User.find().sort("name")
     res.send(users)
 })
