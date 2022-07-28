@@ -1,3 +1,5 @@
+const jwt = require("jsonwebtoken")
+const config = require("config")
 const _ = require("lodash")
 const bcrypt = require("bcrypt")
 const mongoose = require("mongoose")
@@ -31,8 +33,11 @@ router.post("/", async (req, res) => {
     await user.save()
     console.log("User added:", user)
 
-    // this .pick method comes from the lodash utility library
-    res.send( _.pick(user, ["_id", "name", "email"]) )
+    const token = user.generateAuthToken()
+    
+    // passing a header back to contain token for automatic login upon registration of new user
+    // first argument is name of the header, second argument is the value (in this case the token).
+    res.header("x-auth-token", token).send( _.pick(user, ["_id", "name", "email"]) )
 })
 
 router.put("/:id", async (req, res) => {

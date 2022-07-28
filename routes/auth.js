@@ -32,7 +32,9 @@ router.post("/", async (req, res) => {
     const validPassword = await bcrypt.compare(req.body.password, user.password)
     if (!validPassword) return res.status(400).send("Invalid email or passwrod")
 
-    res.send(true);
+    // jwt first argument is payload, second argument is the private key
+    const token = user.generateAuthToken()
+    res.send(token);
 })
 
 // it may not make sense to have other HTTP methods other than the post, since there is no "auth" data stored in the database to read, update, or delete.
